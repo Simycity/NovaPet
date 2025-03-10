@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Agenda de Horários</title>
+        <style>
+            /* Fundo com imagem desfocada */
+            body {
+                font-family: Arial, sans-serif;
+                text-align: center;
+                margin: 0;
+                padding: 0;
+                height: 100vh;
+                background: url('https://portalmelhoresamigos.com.br/wp-content/uploads/2019/02/Post_portalmelhoresamigos_7-1024x576.png') no-repeat center center/cover;
+                position: relative;
+            }
+
+            /* Camada de desfoque */
+            .background-blur {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: inherit;
+                filter: blur(8px);
+                z-index: -1;
+            }
+
+            /* Estilização geral */
+            .container {
+                padding: 20px;
+            }
+
+            .box {
+                background: rgba(255, 255, 255, 0.85);
+                padding: 20px;
+                margin: 20px auto;
+                width: 70%;
+                border-radius: 10px;
+                box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+            }
+
+            h2 {
+                color: #770049;
+                text-shadow: 1px 1px 3px black;
+            }
+
+            /* Botão de voltar */
+            .btn-voltar {
+                background-color: #770049;
+                color: white;
+                padding: 10px 20px;
+                text-decoration: none;
+                border-radius: 10px;
+                font-size: 1.2em;
+                display: inline-block;
+                margin: 20px;
+            }
+
+            .btn-voltar:hover {
+                background-color: #a902ca;
+            }
+
+            /* Lista de serviços */
+            ul {
+                list-style-type: none;
+                padding: 0;
+            }
+
+            p {
+                font-size: 1.2em;
+            }
+
+            /* Inputs e botão */
+            input, button {
+                padding: 10px;
+                margin: 5px;
+                border-radius: 5px;
+                border: 1px solid #770049;
+            }
+
+            button {
+                background-color: #770049;
+                color: white;
+                cursor: pointer;
+            }
+
+            button:hover {
+                background-color: #a902ca;
+            }
+
+            /* Tabela estilizada */
+            table {
+                width: 80%;
+                margin: 20px auto;
+                border-collapse: collapse;
+                background: white;
+            }
+
+            th, td {
+                border: 1px solid black;
+                padding: 10px;
+                text-align: center;
+            }
+
+            th {
+                background-color: #770049;
+                color: white;
+            }
+
+            /* Mensagem de erro */
+            #mensagem {
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+
+        <!-- Camada de fundo desfocada -->
+        <div class="background-blur"></div>
+
+        <div class="container">
+            <a href="index.html" class="btn-voltar">Voltar</a>
+
+            <div class="box">
+                <h2>Tipos de Serviços:</h2>
+                <p>
+                    ✅ Banho e Tosa <br>
+                    ✅ Consulta Veterinária <br>
+                    ✅ Internação <br>
+                    ✅ Exames <br>
+                    ✅ Vacinação
+                </p>
+            </div>
+
+            <div class="box">
+                <h2>Agenda de Horários</h2>
+                <input type="date" id="data">
+                <input type="time" id="horario">
+                <input type="text" id="compromisso" placeholder="Descrição">
+                <button onclick="adicionarHorario()">Adicionar</button>
+                <p id="mensagem"></p>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Horário</th>
+                        <th>Compromisso</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody id="agendaBody"></tbody>
+            </table>
+        </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", carregarAgenda);
+
+            function adicionarHorario() {
+                let data = document.getElementById("data").value;
+                let horario = document.getElementById("horario").value;
+                let compromisso = document.getElementById("compromisso").value;
+                let mensagem = document.getElementById("mensagem");
+
+                if (!data || !horario || !compromisso) {
+                    alert("Preencha todos os campos!");
+                    return;
+                }
+
+                let agora = new Date();
+                let dataSelecionada = new Date(`${data}T${horario}`);
+
+                if (dataSelecionada < agora) {
+                    mensagem.textContent = "Não é possível agendar para um horário passado!";
+                    mensagem.style.color = "red";
+                    return;
+                }
+
+                let tabela = document.getElementById("agendaBody");
+                let linhas = tabela.getElementsByTagName("tr");
+
+                for (let i = 0; i < linhas.length; i++) {
+                    if (linhas[i].cells[0].textContent === data && linhas[i].cells[1].textContent === horario) {
+                        mensagem.textContent = "Este horário já está ocupado! Escolha outro.";
+                        mensagem.style.color = "red";
+                        return;
+                    }
+                }
+
+                let novaLinha = tabela.insertRow();
+                novaLinha.insertCell(0).textContent = data;
+                novaLinha.insertCell(1).textContent = horario;
+                novaLinha.insertCell(2).textContent = compromisso;
+                novaLinha.insertCell(3).innerHTML = '<button onclick="removerLinha(this)">Remover</button>';
+
+                salvarNoLocalStorage(data, horario, compromisso);
+
+                document.getElementById("data").value = "";
+                document.getElementById("horario").value = "";
+                document.getElementById("compromisso").value = "";
+                mensagem.textContent = "Horário adicionado com sucesso!";
+                mensagem.style.color = "green";
+            }
+
+            function removerLinha(botao) {
+                let linha = botao.parentNode.parentNode;
+                let data = linha.cells[0].textContent;
+                let horario = linha.cells[1].textContent;
+                linha.parentNode.removeChild(linha);
+
+                removerDoLocalStorage(data, horario);
+
+                document.getElementById("mensagem").textContent = "Horário removido!";
+                document.getElementById("mensagem").style.color = "blue";
+            }
+
+            function salvarNoLocalStorage(data, horario, compromisso) {
+                let agenda = JSON.parse(localStorage.getItem("agenda")) || [];
+                agenda.push({ data, horario, compromisso });
+                localStorage.setItem("agenda", JSON.stringify(agenda));
+            }
+
+            function carregarAgenda() {
+                let agenda = JSON.parse(localStorage.getItem("agenda")) || [];
+                let tabela = document.getElementById("agendaBody");
+
+                agenda.forEach(item => {
+                    let novaLinha = tabela.insertRow();
+                    novaLinha.insertCell(0).textContent = item.data;
+                    novaLinha.insertCell(1).textContent = item.horario;
+                    novaLinha.insertCell(2).textContent = item.compromisso;
+                    novaLinha.insertCell(3).innerHTML = '<button onclick="removerLinha(this)">Remover</button>';
+                });
+            }
+
+            function removerDoLocalStorage(data, horario) {
+                let agenda = JSON.parse(localStorage.getItem("agenda")) || [];
+                agenda = agenda.filter(item => !(item.data === data && item.horario === horario));
+                localStorage.setItem("agenda", JSON.stringify(agenda));
+            }
+        </script>
+    </body>
+</html>

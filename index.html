@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>NovaPet</title>
+        <style>
+            /* Define a imagem de fundo com desfoque */
+            body {
+                font-family: Arial, sans-serif;
+                text-align: center;
+                margin: 0;
+                padding: 0;
+                height: 100vh;
+                background: url('https://crmvsp.gov.br/wp-content/uploads/2023/07/04.07.2023_Cuidados-com-caes-e-gatos-no-inverno_veja-como-proteger-seus-pets_AdobeStock_194955015-1024x683.jpeg') no-repeat center center/cover;
+                position: relative;
+            }
+
+            /* Camada de desfoque */
+            .background-blur {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: inherit;
+                filter: blur(8px);
+                z-index: -1;
+            }
+
+            h1 {
+                color: #ffffff;
+                text-shadow: 2px 2px 5px black;
+            }
+
+            nav ul {
+                list-style: none;
+                padding: 0;
+            }
+
+            nav ul li {
+                display: inline;
+                margin-right: 15px;
+            }
+
+            nav ul li a {
+                text-decoration: none;
+                color: #ffffff;
+                font-weight: bold;
+                text-shadow: 1px 1px 3px black;
+            }
+
+            nav ul li a:hover {
+                color: #a902ca;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            .box {
+                background: rgba(255, 255, 255, 0.8);
+                padding: 20px;
+                margin: 20px auto;
+                width: 60%;
+                border-radius: 10px;
+                box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+            }
+
+            footer {
+                background-color: rgba(119, 0, 73, 0.9);
+                color: black;
+                padding: 15px;
+                margin-top: 20px;
+                border-radius: 10px;
+            }
+
+            footer ul {
+                list-style: none;
+                padding: 0;
+            }
+        </style>
+    </head>
+
+    <body>
+        
+        <!-- Camada de fundo desfocada -->
+        <div class="background-blur"></div>
+
+        <div class="container">
+            <header class="box">
+                <h1>🐶 NovaPet 🐱</h1>
+                <nav>
+                    <ul>
+                        <li><a href="sobre.html">Sobre</a></li>
+                        <li><a href="servicos.html">Serviços</a></li>
+                    </ul>
+                </nav>
+            </header>
+        </div>
+        
+        <div class="box">
+            <h2>Seja bem-vindo ao NovaPet!</h2>
+            <p>
+                Se você é um amante de animais, está no lugar certo! No NovaPet, oferecemos os melhores serviços para o seu pet. 
+                Seja para banho, tosa ou uma consulta veterinária, estamos prontos para te ajudar. 
+                Venha nos conhecer!
+            </p>
+        </div>
+
+        <footer class="box">
+            <h2>Contatos:</h2>
+            <ul>
+                <li>📞 Telefone: (11) 99999-9999</li>
+                <li>✉️ Email: emailteste@gmail.com</li>
+                <li>💬 WhatsApp: (11) 99999-9999</li>
+            </ul>
+        </footer>
+    </body>
+</html>
+<!--Desenvolvido por: Café ☕️-->
